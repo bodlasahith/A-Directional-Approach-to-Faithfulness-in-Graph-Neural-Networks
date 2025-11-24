@@ -1,0 +1,69 @@
+# Default configuration for GNN faithfulness experiments
+
+# Model configuration
+model:
+  name: gcn  # gcn, gat, gin
+  hidden_channels: 64
+  num_layers: 3
+  dropout: 0.5
+  heads: 4  # For GAT only
+
+# Dataset configuration
+dataset:
+  name: MUTAG  # MUTAG, PTC_MR, PROTEINS, etc.
+  data_dir: ./data/raw
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+
+# Training configuration
+training:
+  epochs: 200
+  batch_size: 32
+  learning_rate: 0.01
+  weight_decay: 5e-4
+  seed: 42
+  early_stopping_patience: 50
+
+# Explainer configuration
+explainer:
+  name: gnnexplainer  # gnnexplainer, pgexplainer, subgraphx
+  epochs: 200
+  lr: 0.01
+
+# Faithfulness testing configuration
+faithfulness:
+  top_k_nodes: 5  # Number of top nodes to ablate
+  top_k_edges: 3  # Number of top edges to test
+  num_samples: 50  # Number of graphs to test
+  ablation_mode: zero  # zero or remove
+  
+  # Metric weights for combined faithfulness index
+  weights:
+    necessity: 0.4
+    sufficiency: 0.4
+    directionality: 0.2
+
+# Faithfulness Direction Identification (FDI) configuration
+fdi:
+  enable: false
+  adversarial_epochs: 5
+  adversarial_fraction: 0.3  # Fraction of nodes marked misleading
+  top_k_directions: 4        # Singular vectors per layer
+  steering_alpha: 0.5        # Strength for activation steering
+  lambda_fg: 0.5             # Weight for prediction shift term in FG
+  cp_threshold_drop: 0.1     # Confidence drop threshold for causal precision
+
+# Tracking configuration
+tracking:
+  enabled: false
+  project: gnn-faithfulness
+  entity: null  # Set to your W&B username/team
+  log_interval: 10
+
+# Output configuration
+output:
+  model_dir: ./models
+  results_dir: ./results
+  plots_dir: ./results/plots
+  save_explanations: true
